@@ -46,7 +46,7 @@ diff -u -r1.11 policy_parse.y
 +static int define_typealias(void)
 +{
 +	char *id;
-+	type_datum_t *t, *aliasdatum;;
++	type_datum_t *t, *aliasdatum;
 +	int ret;
 +
 +
