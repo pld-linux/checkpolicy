@@ -1,12 +1,12 @@
 Summary:	SELinux policy compiler
 Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	1.6
+Version:	1.8
 Release:	1
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	6c863686064a002c3d80fa8a473b2d5f
+# Source0-md5:	44993d2c0d986d7ca289954a33cc5a84
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -52,7 +52,6 @@ wymagany do zbudowania polityki.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_bindir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
