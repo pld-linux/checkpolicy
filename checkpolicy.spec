@@ -46,6 +46,8 @@ wymagany do zbudowania polityki.
 %prep
 %setup -q
 
+sed -i -e "s#{PREFIX}/lib$#{PREFIX}/%{_lib}#g" Makefile
+
 %build
 %{__make} \
 	CC="%{__cc}" \
