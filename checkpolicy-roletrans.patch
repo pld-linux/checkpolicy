@@ -1,0 +1,16 @@
+Index: checkpolicy/policy_parse.y
+===================================================================
+RCS file: /nfshome/pal/CVS/selinux-usr/checkpolicy/policy_parse.y,v
+retrieving revision 1.9
+diff -u -r1.9 policy_parse.y
+--- checkpolicy/policy_parse.y	17 Dec 2003 16:52:20 -0000	1.9
++++ checkpolicy/policy_parse.y	7 Jan 2004 13:19:04 -0000
+@@ -2339,8 +2339,6 @@
+ 		return 0;
+ 	}
+ 
+-	yywarn("Role transition rules are DEPRECATED, use domain transitions.");
+-
+ 	ebitmap_init(&roles);
+ 	ebitmap_init(&types);
+ 

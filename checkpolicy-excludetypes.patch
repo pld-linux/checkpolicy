@@ -1,0 +1,263 @@
+--- checkpolicy-1.4/policy_parse.y.excludetypes	2004-01-20 18:11:12.024833429 -0500
++++ checkpolicy-1.4/policy_parse.y	2004-01-20 18:11:12.044834543 -0500
+@@ -520,6 +520,8 @@
+ 			| tilde nested_id_set
+ 	 		{ if (insert_id("~", 0)) return -1; 
+ 			  if (insert_separator(0)) return -1; }
++                        | identifier '-' { if (insert_id("-", 0)) return -1; } identifier 
++			{ if (insert_separator(0)) return -1; }
+ 			;
+ tilde_push              : tilde
+                         { if (insert_id("~", 1)) return -1; }
+@@ -546,7 +548,7 @@
+                         ;
+ nested_id_list          : nested_id_element | nested_id_list nested_id_element
+                         ;
+-nested_id_element       : identifier | nested_id_set
++nested_id_element       : identifier | '-' { if (insert_id("-", 0)) return -1; } identifier | nested_id_set
+                         ;
+ identifier		: IDENTIFIER
+ 			{ if (insert_id(yytext,0)) return -1; }
+@@ -1661,15 +1663,19 @@
+ 
+ 
+ static int set_types(ebitmap_t *set,
+-		     char *id)
++		     ebitmap_t *negset,
++		     char *id,
++		     int *add)
+ {
+ 	type_datum_t *t;
+ 	unsigned int i;
+ 
+ 	if (strcmp(id, "*") == 0) {
+-		/* set all types */
+-		for (i = 0; i < policydbp->p_types.nprim; i++) 
+-			ebitmap_set_bit(set, i, TRUE);
++		/* set all types not in negset */
++		for (i = 0; i < policydbp->p_types.nprim; i++) {
++			if (!ebitmap_get_bit(negset, i))
++				ebitmap_set_bit(set, i, TRUE);
++		}
+ 		free(id);
+ 		return 0;
+ 	}
+@@ -1686,6 +1692,12 @@
+ 		return 0;
+ 	}
+ 
++	if (strcmp(id, "-") == 0) {
++		*add = 0;
++		free(id);
++		return 0;
++	}	
++
+ 	t = hashtab_search(policydbp->p_types.table, id);
+ 	if (!t) {
+ 		sprintf(errormsg, "unknown type %s", id);
+@@ -1695,18 +1707,42 @@
+ 	}
+ 
+ 	if (t->isattr) {
+-		/* set all types with this attribute */
++		/* set or clear all types with this attribute,
++		   but do not set anything explicitly cleared previously */
+ 		for (i = ebitmap_startbit(&t->types); i < ebitmap_length(&t->types); i++) {
+ 			if (!ebitmap_get_bit(&t->types, i)) 
+ 				continue;		
+-			ebitmap_set_bit(set, i, TRUE);
++			if (!(*add)) {
++				ebitmap_set_bit(set, i, FALSE);
++				ebitmap_set_bit(negset, i, TRUE);
++			} else if (!ebitmap_get_bit(negset, i)) {
++				ebitmap_set_bit(set, i, TRUE);
++#if VERBOSE
++			} else {
++				char *name = type_val_to_name(i+1);
++				sprintf(errormsg, "ignoring %s due to prior -%s", name, name);
++				yywarn(errormsg);
++#endif
++			}
+ 		}
+ 	} else {
+-		/* set one type */
+-		ebitmap_set_bit(set, t->value - 1, TRUE);
++		/* set or clear one type, but do not set anything
++		   explicitly cleared previously */	
++		if (!(*add)) {
++			ebitmap_set_bit(set, t->value - 1, FALSE);
++			ebitmap_set_bit(negset, t->value - 1, TRUE);
++		} else if (!ebitmap_get_bit(negset, t->value - 1)) {
++			ebitmap_set_bit(set, t->value - 1, TRUE);
++#if VERBOSE
++		} else {
++			sprintf(errormsg, "ignoring %s due to prior -%s", id, id);
++			yywarn(errormsg);
++#endif
++		}
+ 	}
+ 
+ 	free(id);
++	*add = 1;
+ 	return 0;
+ }
+ 
+@@ -1718,9 +1754,9 @@
+ 	avtab_datum_t avdatum, *avdatump;
+ 	type_datum_t *datum;
+ 	class_datum_t *cladatum;
+-	ebitmap_t stypes, ttypes, tclasses;
++	ebitmap_t stypes, ttypes, tclasses, negset;
+ 	__u32 newtype = 0;
+-	int ret;
++	int ret, add = 1;
+ 	unsigned int i, j, k;
+ 
+ 	if (pass == 1) {
+@@ -1739,15 +1775,19 @@
+ 	ebitmap_init(&ttypes);
+ 	ebitmap_init(&tclasses);
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+-		if (set_types(&stypes, id))
++		if (set_types(&stypes, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+-		if (set_types(&ttypes, id))
++		if (set_types(&ttypes, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
+ 	while ((id = queue_remove(id_queue))) {
+ 		cladatum = hashtab_search(policydbp->p_classes.table, id);
+@@ -1964,10 +2004,10 @@
+ 	char *id;
+ 	class_datum_t *cladatum;
+ 	perm_datum_t *perdatum;
+-	ebitmap_t stypes, ttypes, tclasses;
++	ebitmap_t stypes, ttypes, tclasses, negset;
+ 	access_vector_t *avp;
+ 	unsigned int i, j, hiclass;
+-	int self = 0;
++	int self = 0, add = 1;
+ 	te_assert_t *newassert;
+ 
+ 	if (pass == 1) {
+@@ -1986,19 +2026,23 @@
+ 	ebitmap_init(&ttypes);
+ 	ebitmap_init(&tclasses);
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+-		if (set_types(&stypes, id))
++		if (set_types(&stypes, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+ 		if (strcmp(id, "self") == 0) {
+ 			self = 1;
+ 			continue;
+ 		}
+-		if (set_types(&ttypes, id))
++		if (set_types(&ttypes, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
+ 	hiclass = 0;
+ 	while ((id = queue_remove(id_queue))) {
+@@ -2139,7 +2183,8 @@
+ {
+ 	role_datum_t *role;
+ 	char *role_id, *id;
+-	int ret;
++	int ret, add = 1;
++	ebitmap_t negset;
+ 
+ 	if (pass == 1) {
+ 		while ((id = queue_remove(id_queue))) 
+@@ -2173,10 +2218,12 @@
+ 	} else
+ 		free(role_id);
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+-		if (set_types(&role->types, id))
++		if (set_types(&role->types, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
+ 	return 0;
+ }
+@@ -2325,9 +2372,10 @@
+ {
+ 	char *id;
+ 	role_datum_t *role;
+-	ebitmap_t roles, types;
++	ebitmap_t roles, types, negset;
+ 	struct role_trans *tr = 0;
+ 	unsigned int i, j;
++	int add = 1;
+ 
+ 	if (pass == 1) {
+ 		while ((id = queue_remove(id_queue))) 
+@@ -2347,10 +2395,12 @@
+ 			return -1;
+ 	}
+ 
++	ebitmap_init(&negset);
+ 	while ((id = queue_remove(id_queue))) {
+-		if (set_types(&types, id))
++		if (set_types(&types, &negset, id, &add))
+ 			return -1;
+ 	}
++	ebitmap_destroy(&negset);
+ 
+ 	id = (char *) queue_remove(id_queue);
+ 	if (!id) {
+@@ -2587,8 +2637,10 @@
+ 	struct constraint_expr *expr, *e1 = NULL, *e2;
+ 	user_datum_t *user;
+ 	role_datum_t *role;
++	ebitmap_t negset;
+ 	char *id;
+ 	__u32 val;
++	int add = 1;
+ 
+ 	if (pass == 1) {
+ 		if (expr_type == CEXPR_NAMES) {
+@@ -2656,6 +2708,7 @@
+ 	case CEXPR_NAMES:
+ 		expr->attr = arg1;
+ 		expr->op = arg2;
++		ebitmap_init(&negset);
+ 		while ((id = (char *) queue_remove(id_queue))) {
+ 			if (expr->attr & CEXPR_USER) {
+ 				user = (user_datum_t *) hashtab_search(policydbp->p_users.table,
+@@ -2678,7 +2731,7 @@
+ 				}
+ 				val = role->value;
+ 			} else if (expr->attr & CEXPR_TYPE) {
+-				if (set_types(&expr->names, id)) {
++				if (set_types(&expr->names, &negset, id, &add)) {
+ 					free(expr);
+ 					return 0;
+ 				}
+@@ -2696,6 +2749,7 @@
+ 			}
+ 			free(id);
+ 		}
++		ebitmap_destroy(&negset);
+ 		return (uintptr_t)expr;
+ 	default:
+ 		yyerror("invalid constraint expression");
