@@ -1,16 +1,12 @@
 Summary:	SELinux policy compiler
 Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	1.4
-Release:	2
-License:	Public domain (uncopyrighted)
+Version:	1.6
+Release:	1
+License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	126851036aba68c53a115f32758d6e38
-Patch0:		%{name}-excludetypes.patch
-Patch1:		%{name}-lineno.patch
-Patch2:		%{name}-roletrans.patch
-Patch3:		%{name}-typealias.patch
+# Source0-md5:	6c863686064a002c3d80fa8a473b2d5f
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -47,10 +43,6 @@ wymagany do zbudowania polityki.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %build
 %{__make} \
