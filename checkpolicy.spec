@@ -1,16 +1,16 @@
 Summary:	SELinux policy compiler
 Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	1.20
+Version:	1.22
 Release:	1
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	076c4234591935f361363d7226540f47
+# Source0-md5:	3b4d690a206d05ac7619ee61b99b6da9
 BuildRequires:	bison
 BuildRequires:	flex
 # it uses libsepol symbols not exported in shared library
-BuildRequires:	libsepol-static
+BuildRequires:	libsepol-static >= 1.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -46,13 +46,12 @@ wymagany do zbudowania polityki.
 %prep
 %setup -q
 
-sed -i -e "s#{PREFIX}/lib\$#{PREFIX}/%{_lib}#g" Makefile
-
 %build
 %{__make} \
 	CC="%{__cc}" \
 	CFLAGS="%{rpmcflags} -pipe" \
-	YACC="bison -y"
+	YACC="bison -y" \
+	LIBDIR=%{_libdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
