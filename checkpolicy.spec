@@ -47,7 +47,7 @@ wymagany do zbudowania polityki.
 %build
 %{__make} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -O2 -pipe -include global.h -I. -Iinclude" \
+	CFLAGS="%{rpmcflags} -pipe -include global.h -I. -Iinclude" \
 	YACC="bison -y"
 
 %install
