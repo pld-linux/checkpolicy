@@ -1,4 +1,5 @@
 Summary:	SELinux policy compiler
+Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
 Version:	1.0
 Release:	1
@@ -24,19 +25,20 @@ This package contains checkpolicy, the SELinux policy compiler. Only
 required for building policies.
 
 %description -l pl
-Security-enhanced Linux jest prototypem j±dra Linuksa i wielu aplikacji 
-u¿ytkowych o funkcjach podwy¿szonego bezpieczeñstwa. Zaprojektowany jest
-tak, aby w prosty sposób ukazaæ znaczenie mandatowej kontroli dostêpu dla 
-spo³eczno¶ci Linuksowej. Ukazuje równie¿ jak tak± kontrolê mo¿na dodaæ do 
-istniej±cego systemu typu Linuks. J±dro SELinux zawiera nowe sk³adniki 
-architektury pierwotnie opracowane w celu ulepszenia bezpieczeñstwa systemu 
-operacyjnego Flask. Te elementy zapewniaj± ogólne wsparcie we wdra¿aniu wielu 
-typów polityk mandatowej kontroli dostêpu, w³±czaj±c te wzorowane na: Type 
-Enforcement (TE), kontroli dostêpu opartej na rolach (RBAC) i zabezpieczeniach 
-wielopoziomowych.
+Security-enhanced Linux jest prototypem j±dra Linuksa i wielu
+aplikacji u¿ytkowych o funkcjach podwy¿szonego bezpieczeñstwa.
+Zaprojektowany jest tak, aby w prosty sposób ukazaæ znaczenie
+mandatowej kontroli dostêpu dla spo³eczno¶ci Linuksowej. Ukazuje
+równie¿ jak tak± kontrolê mo¿na dodaæ do istniej±cego systemu typu
+Linux. J±dro SELinux zawiera nowe sk³adniki architektury pierwotnie
+opracowane w celu ulepszenia bezpieczeñstwa systemu operacyjnego
+Flask. Te elementy zapewniaj± ogólne wsparcie we wdra¿aniu wielu typów
+polityk mandatowej kontroli dostêpu, w³±czaj±c te wzorowane na: Type
+Enforcement (TE), kontroli dostêpu opartej na rolach (RBAC) i
+zabezpieczeniach wielopoziomowych.
 
-Ten pakiet zawiera chceckpolicy - kompilator polityki SELinux. Jest wymagany 
-do zbudowania polityki.
+Ten pakiet zawiera checkpolicy - kompilator polityki SELinux. Jest
+wymagany do zbudowania polityki.
 
 %prep
 %setup -q
@@ -47,7 +49,9 @@ do zbudowania polityki.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_bindir}
-%{__make} DESTDIR="$RPM_BUILD_ROOT" install
+
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
