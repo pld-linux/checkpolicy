@@ -2,7 +2,7 @@ Summary:	SELinux policy compiler
 Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
 Version:	1.18
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
@@ -46,7 +46,7 @@ wymagany do zbudowania polityki.
 %prep
 %setup -q
 
-sed -i -e "s#{PREFIX}/lib$#{PREFIX}/%{_lib}#g" Makefile
+sed -i -e "s#{PREFIX}/lib\$#{PREFIX}/%{_lib}#g" Makefile
 
 %build
 %{__make} \
