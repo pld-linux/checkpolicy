@@ -7,7 +7,8 @@ License:	Public domain (uncopyrighted)
 Group:		Development
 # Source0-md5:	7b69ecafb4b8dd8313dae0e5fadc960e
 Source0:	http://www.nsa.gov/selinux/lk/%{name}-%{version}.tgz
-BuildRequires:	byacc
+BuildRequires:	bison
+BuildRequires:	flex
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -44,7 +45,10 @@ wymagany do zbudowania polityki.
 %setup -q
 
 %build
-%{__make}
+%{__make} \
+	CC="%{__cc}" \
+	CFLAGS="%{rpmcflags} -O2 -pipe -include global.h -I. -Iinclude" \
+	YACC="bison -y"
 
 %install
 rm -rf $RPM_BUILD_ROOT
