@@ -4,6 +4,7 @@ Version:	1.0
 Release:	1
 License:	Public domain (uncopyrighted)
 Group:		Development
+# Source0-md5:	7b69ecafb4b8dd8313dae0e5fadc960e
 Source0:	http://www.nsa.gov/selinux/lk/%{name}-%{version}.tgz
 BuildRequires:	byacc
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
