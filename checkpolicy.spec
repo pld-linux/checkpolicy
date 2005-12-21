@@ -1,16 +1,16 @@
 Summary:	SELinux policy compiler
 Summary(pl):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	1.26
+Version:	1.28
 Release:	1
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	463676c64949e4ca702c1cc0d2e90389
+# Source0-md5:	f74b79f44c6c39191ab67bd04c977851
 BuildRequires:	bison
 BuildRequires:	flex
 # it uses libsepol symbols not exported in shared library
-BuildRequires:	libsepol-static >= 1.8
+BuildRequires:	libsepol-static >= 1.10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
