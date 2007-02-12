@@ -1,5 +1,5 @@
 Summary:	SELinux policy compiler
-Summary(pl.UTF-8):   Kompilator polityki SELinux
+Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
 Version:	1.34.0
 Release:	1
