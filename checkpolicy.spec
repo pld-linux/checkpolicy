@@ -1,12 +1,12 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	2.0.1
+Version:	2.0.4
 Release:	1
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	8b8644ccda2f38062981a6ac53659660
+# Source0-md5:	22afcfaa42445bc5c06254dc84871ea5
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	libselinux-devel >= 2.0
