@@ -1,12 +1,12 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	2.0.12
+Version:	2.0.16
 Release:	1
 License:	GPL v2
 Group:		Development
 Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	f2c3932f089342af0374671a0899960e
+# Source0-md5:	9a3b28571b5613687ec311479031f2ad
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	libselinux-devel >= 2.0
@@ -66,5 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog
-%attr(755,root,root) %{_bindir}/*
-%{_mandir}/man8/*
+%attr(755,root,root) %{_bindir}/checkmodule
+%attr(755,root,root) %{_bindir}/checkpolicy
+%{_mandir}/man8/checkmodule.8*
+%{_mandir}/man8/checkpolicy.8*
