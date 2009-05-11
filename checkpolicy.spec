@@ -1,22 +1,23 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	2.0.16
+Version:	2.0.19
 Release:	1
 License:	GPL v2
 Group:		Development
-Source0:	http://www.nsa.gov/selinux/archives/%{name}-%{version}.tgz
-# Source0-md5:	9a3b28571b5613687ec311479031f2ad
+Source0:	http://userspace.selinuxproject.org/releases/20090403/devel/%{name}-%{version}.tar.gz
+# Source0-md5:	453b8170294a761f421d46bd3cf198e5
+URL:		http://userspace.selinuxproject.org/trac
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	libselinux-devel >= 2.0
 # it uses libsepol symbols not exported in shared library
-BuildRequires:	libsepol-static >= 2.0
+BuildRequires:	libsepol-static >= 2.0.36
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Security-enhanced Linux is a patch of the Linux kernel and a number
-of utilities with enhanced security functionality designed to add
+Security-enhanced Linux is a patch of the Linux kernel and a number of
+utilities with enhanced security functionality designed to add
 mandatory access controls to Linux. The Security-enhanced Linux kernel
 contains new architectural components originally developed to improve
 the security of the Flask operating system. These architectural
