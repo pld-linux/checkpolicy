@@ -1,18 +1,18 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	2.1.0
+Version:	2.1.8
 Release:	1
 License:	GPL v2
 Group:		Development
-Source0:	http://userspace.selinuxproject.org/releases/20110727/devel/%{name}-%{version}.tar.gz
-# Source0-md5:	c447f1d6cc6897f058d7e44e961fe3fd
+Source0:	http://userspace.selinuxproject.org/releases/20120216/%{name}-%{version}.tar.gz
+# Source0-md5:	e7b5d62873d4efc8a502b75f042f6735
 URL:		http://userspace.selinuxproject.org/trac
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	libselinux-devel >= 2.1.0
+BuildRequires:	libselinux-devel >= 2.1.9
 # it uses libsepol symbols not exported in shared library
-BuildRequires:	libsepol-static >= 2.1.0
+BuildRequires:	libsepol-static >= 2.1.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
