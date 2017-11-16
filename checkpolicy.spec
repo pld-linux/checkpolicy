@@ -1,19 +1,19 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	2.6
+Version:	2.7
 Release:	1
 License:	GPL v2
 Group:		Development
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
-Source0:	https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/20161014/%{name}-%{version}.tar.gz
-# Source0-md5:	2b581f8fe8eb8f55f111088e15d76c3a
+Source0:	https://raw.githubusercontent.com/wiki/SELinuxProject/selinux/files/releases/20170804/%{name}-%{version}.tar.gz
+# Source0-md5:	5c718eaad4d3015bd5665ffde77b50fd
 URL:		https://github.com/SELinuxProject/selinux/wiki
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	libselinux-devel >= 2.6
+BuildRequires:	libselinux-devel >= 2.7
 # it uses libsepol symbols not exported in shared library
-BuildRequires:	libsepol-static >= 2.6
+BuildRequires:	libsepol-static >= 2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -60,14 +60,14 @@ wymagany do zbudowania polityki.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+	DESTDIR=$RPM_BUILD_ROOT \
+	LIBSEPOLA=%{_libdir}/libsepol.a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog
 %attr(755,root,root) %{_bindir}/checkmodule
 %attr(755,root,root) %{_bindir}/checkpolicy
 %{_mandir}/man8/checkmodule.8*
