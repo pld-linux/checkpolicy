@@ -2,13 +2,13 @@
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	3.8
+Version:	3.8.1
 Release:	1
 License:	GPL v2
 Group:		Development
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
 Source0:	https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	4aad264e89b48d74d62e3a3690bda919
+# Source0-md5:	2b6211f53910027fea5615b6d457a228
 URL:		https://github.com/SELinuxProject/selinux/wiki
 BuildRequires:	bison
 BuildRequires:	flex
