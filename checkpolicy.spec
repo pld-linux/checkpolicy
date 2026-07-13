@@ -1,14 +1,14 @@
-%define	selinux_ver	3.10
+%define	selinux_ver	3.11
 Summary:	SELinux policy compiler
 Summary(pl.UTF-8):	Kompilator polityki SELinux
 Name:		checkpolicy
-Version:	3.10
+Version:	3.11
 Release:	1
 License:	GPL v2
 Group:		Development
 #Source0Download: https://github.com/SELinuxProject/selinux/wiki/Releases
 Source0:	https://github.com/SELinuxProject/selinux/releases/download/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	88341a244247f981a23945daec04cd5c
+# Source0-md5:	50a5584e16d960b91ea8441c99bff932
 URL:		https://github.com/SELinuxProject/selinux/wiki
 BuildRequires:	bison
 BuildRequires:	flex
